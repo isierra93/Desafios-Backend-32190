@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Zapatilla Boca",
+    "price": 400,
+    "thumbnail": "www.google.com",
+    "id": 1
+  },
+  {
+    "title": "Remera River",
+    "price": 100,
+    "thumbnail": "www.google.com",
+    "id": 2
+  },
+  {
+    "title": "Mochila MESSI",
+    "price": 20000,
+    "thumbnail": "www.google.com.ar",
+    "id": 3
+  }
+]
