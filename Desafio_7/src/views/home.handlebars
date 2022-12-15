@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="form-container">
+        <h2>Form</h2>
+        <form class="form-style-4" id="productForm">
+            <label>Title</label>
+            <input type="text" name="title" id="title"/>
+            <br>
+            <label>Price</label>
+            <input type="number" name="price" id="price"/>
+            <br>
+            <label>Thumbnail URL</label>
+            <input type="text" name="thumbnail" id="thumbnail"/>
+            <br>
+            <br>
+            <button class="button" type="submit" value="one">Submit</button>
+        </form>
+    </div>
+
+    <div id="productsContainer"></div>
+
+    <div class="chatContainer">
+
+    <div id="chatContainer"></div>
+    
+        <form id="chatForm">
+        <label id="username"></label>
+        <input type="text" id="messageChat"/>
+        <button type="submit" value="two">Send</button>
+    </form>
+
+
+    
+    </div>
+    
+    
+</div>
+
+{{> importScripts }}
+<script src="./socket.io/socket.io.js"></script>
+<script src="./index.js"></script>
