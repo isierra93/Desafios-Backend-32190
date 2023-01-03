@@ -3,14 +3,14 @@ const handlebars = require('express-handlebars');
 const {Server} = require('socket.io');
 const path =  require('path');
 
-const ContenedorChat = require('./managers/ContenedorChat')
-
 //DB
 const { mariaDBOptions } = require(`./options/mariaDB`);
+const { optionsSql3 } = require(`./options/sqlite3DB`);
 const ClienteSQL = require(`../src/managers/ContenedorKnex`);
+//Los productos se guardan con MariaDB
 const mariaDB = new ClienteSQL(mariaDBOptions, `productos`);
-
-let chatContainer = new ContenedorChat('chat.txt');
+//Los mesajes se guardian con Sqlite3
+const sqlite = new ClienteSQL(optionsSql3, `mensajes`)
 
 const viewsFolder = path.join(__dirname,"views");
 
@@ -20,7 +20,8 @@ const PORT = process.env.PORT || 8080;
 
 const server = app.listen(PORT, ()=>    {
     console.log(`Server Port ${PORT}`);
-    mariaDB.checkTable()
+    mariaDB.checkTableProd()
+    sqlite.checkTableMsg()
 });
 
 app.use(express.json());
@@ -42,19 +43,19 @@ const io = new Server(server);
 io.on("connection", async(socket)=>{
     console.log("Nuevo cliente conectado");
     //Chat
-    const chat = await chatContainer.getAll();
-    socket.emit("messagesChat", chat);
+    const mensajes = await sqlite.getAll()
+    socket.emit("messagesChat", mensajes);
 
     //Products
     const productosDB = await mariaDB.getAll()
     socket.emit("products", productosDB);
     
-    //Recibir msg
+    //Recibir Chat
     socket.on("newMsg", async(data)=>{
-        await chatContainer.save(data)
-        //enviar los mensajes a todos los socket conecta2
-        const chat = await chatContainer.getAll();
-        io.sockets.emit("messagesChat", chat)
+        await sqlite.save(data);
+        //enviar los mensajes a todos los socket conectados
+        const mensajes = await sqlite.getAll();
+        io.sockets.emit("messagesChat", mensajes);
     })
 
     //Recibir Producto

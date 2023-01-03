@@ -23,27 +23,45 @@ class ClienteSQL{
         };
     };
     //Verificar si existe la tabla. Si no existe crearla
-    async checkTable(){
+    async checkTableProd(){
         try{
             this.knex.schema.hasTable(this.table).then
             (exist =>{
                 if(exist){
                     return console.log(`Tabla ${this.table} ya existe`)
                 }
-                return this.knex.schema.createTable(`productos`, table => {
+                return this.knex.schema.createTable(`${this.table}`, table => {
                     table.increments(`id`).primary()
-                    table.string(`title`, 15).notNullable()
+                    table.string(`title`, 50).notNullable()
                     table.float(`price`).notNullable()
-                    table.string(`thumbnail`, 100)
+                    table.string(`thumbnail`, 10000)
                     console.log(`Tabla ${this.table} no existia, se crea`)
                 })
             })
         }catch(err){
             throw new Error (err);
         }
-        
     }
 
+    async checkTableMsg(){
+        try{
+            this.knex.schema.hasTable(this.table).then
+            (exist =>{
+                if(exist){
+                    return console.log(`Tabla ${this.table} ya existe`)
+                }
+                return this.knex.schema.createTable(`${this.table}`, table => {
+                    table.increments(`id`).primary()
+                    table.string(`author`, 50).notNullable()
+                    table.string(`date`, 50).notNullable()
+                    table.string(`text`, 1000).notNullable()
+                    console.log(`Tabla ${this.table} no existia, se crea`)
+                })
+            })
+        }catch(err){
+            throw new Error (err);
+        }
+    }
 
     async close(){
         this.knex.destroy();

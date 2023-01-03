@@ -1,11 +1,9 @@
 const optionsSql3 = {
     client:`sqlite3`,
     connection: {
-        host: `localhost`,
-        user: `root`,
-        pasword: ``,
-        database: `ecommerce`
-    }
+        filename: `./db/ecommerce.sqlite`
+    },
+    useNullAsDefault: true,
 }
 
 module.exports = {
