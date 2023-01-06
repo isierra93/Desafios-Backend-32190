@@ -1,7 +1,7 @@
 //Imports
 const express = require(`express`);
 const app = express();
-const Contenedor = require(`./Contenedor`);
+const Contenedor = require(`../Contenedor`);
 const handlebars = require(`express-handlebars`);
 const tienda = new Contenedor(`Productos`,`json`);
 
