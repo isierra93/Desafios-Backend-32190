@@ -2,20 +2,18 @@
 const express = require(`express`);
 const app = express();
 const Contenedor = require(`../Contenedor`);
-const handlebars = require(`express-handlebars`);
 const tienda = new Contenedor(`Productos`,`json`);
 
 //Para que el servidor pueda interpretar automaticamente objetos en JSON
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-//Configuracion Handlebars
-app.engine(`handlebars`, handlebars.engine());
+//Configuracion PUG
 app.set(`views`, `./views`);
-app.set(`view engine`, `handlebars`);
+app.set(`view engine`, `pug`);
 
 //Se define ruta de archivos estaticos, se accedera bajo el prefijo virtual /static/:archivo
-app.use(`/static`, express.static(`public`))
+app.use(`/static`, express.static(`public`));
 
 //Sever ON con handle de error de inicio
 const PORT = 8080;
@@ -25,17 +23,15 @@ const server = app.listen(PORT, () =>{
 
 server.on(`error`, err => console.log(`Error en servidor: ${err}`));
 
-//Rutas
-
-//Devuelve todos los productos almacenados en el archivo.
+//Muestra el form para cargar productos
 app.get(`/`, async (req, res) =>{
-    res.render(`entryProds`);
+    res.render(`prodsForm.pug`);
 });
 
-//Muestra
+//Muestra el listado de productos cargados
 app.get(`/productos`, async (req, res) =>{
     const productos = await tienda.getAll();
-    res.render(`listProds`, {productos});
+    res.render(`prodsView.pug`, {productos});
 });
 
 //Recibe el post del form y guarda el producto
