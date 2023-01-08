@@ -1,0 +1,33 @@
+<div class="container d-flex flex-column mt-3">
+    <h1 class="text-center" style="color:blue;">Vista de productos</h1>
+    <% if (productos){%> 
+    <div class="table-responsive">
+        <table class="table table-dark">
+            <tr style="color: yellow;">
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Link</th>
+                <% productos.forEach(function(prod) {%> 
+                    <tr>
+                        <td>
+                            <%= prod.id %>
+                        </td>
+                        <td>
+                            <%= prod.nameInput %>
+                        </td>
+                        <td>
+                            <%= prod.priceInput %>
+                        </td>
+                        <td>
+                            <img style="height: 2rem; width: 2rem;" src=<%= prod.linkInput %> alt=<%= prod.nameInput %> >
+                        </td>
+                    </tr>
+                <% })  %> 
+        </table>
+    </div>
+    <% }else{ %> 
+        <h3 class="alert alert-danger text-center">No se encontraron productos</h3>
+    <% } %>
+<button class="btn btn-success linksNav"><a href="/">Cargar productos</a></button>
+</div>
