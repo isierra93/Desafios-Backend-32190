@@ -1,0 +1,26 @@
+[
+  {
+    "nameInput": "IVAN1",
+    "priceInput": "090",
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 1
+  },
+  {
+    "nameInput": "Coty",
+    "priceInput": "100",
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 2
+  },
+  {
+    "nameInput": "Champiñon",
+    "priceInput": "999",
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 3
+  },
+  {
+    "nameInput": "Amonchi",
+    "priceInput": "9999",
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 4
+  }
+]
