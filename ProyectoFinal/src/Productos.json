@@ -1,0 +1,22 @@
+[
+  {
+    "nombre": "Mochila MBAPPE",
+    "descripcion": "Mochila",
+    "codigo": 5432,
+    "thumbnail": "www.google.com.ar",
+    "precio": 14000,
+    "stock": 1030,
+    "timestamp": "2023-01-22T16:47:35.815Z",
+    "id": 1
+  },
+  {
+    "nombre": "Mochila MBAPPE",
+    "descripcion": "Mochila",
+    "codigo": 5432,
+    "thumbnail": "www.google.com.ar",
+    "precio": 14000,
+    "stock": 1030,
+    "timestamp": "2023-01-22T16:47:35.815Z",
+    "id": 2
+  }
+]
