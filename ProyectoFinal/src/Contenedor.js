@@ -1,5 +1,5 @@
 //Import de libreria FS
-const fs = require(`fs`);
+import fs from "fs"
 
 class Contenedor{
     //Se declara contenedor, con el nombre del archivo y su extension
@@ -140,4 +140,4 @@ class Contenedor{
     };
 };
 
-module.exports = Contenedor;
+export default Contenedor;

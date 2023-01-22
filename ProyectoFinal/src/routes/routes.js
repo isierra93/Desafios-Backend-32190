@@ -3,5 +3,3 @@ const express = require(`express`);
 const { Router } = express;
 const routerProductos = Router();
 const routerCarrito = Router();
-
-module.exports = routerProductos, routerCarrito;
