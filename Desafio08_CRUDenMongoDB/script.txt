@@ -1,0 +1,158 @@
+1-// Crear DB y las colecciones
+use ecommerce
+
+db.createCollection("mensajes")
+db.createCollection("productos")
+
+2-// Agregar documentos a las colecciones
+
+db.mensajes.insertMany(
+[
+  {
+    "author": "cotiiasddd@gmail.com",
+    "text": "Prueba123",
+    "time": "19/1/2023, 6:48:34",
+    "id": 1
+    },
+  {
+    "author": "cotiiasddd@gmail.com",
+    "text": "Hii!",
+    "time": "19/1/2023, 6:48:34",
+    "id": 2
+  },
+  {
+    "author": "ivaaan@gmail.com",
+    "text": "asdd!",
+    "time": "19/1/2023, 6:49:57",
+    "id": 3
+  },
+  {
+    "author": "Amonchi@gmail.com",
+    "text": "Let`s go!!",
+    "time": "19/1/2023, 6:49:57",
+    "id": 4
+  },
+  {
+    "author": "champi@gmail.com",
+    "text": "ohh!",
+    "time": "19/1/2023, 6:49:57",
+    "id": 5
+  }
+]
+)
+
+db.productos.insertMany(
+    [
+  {
+    "nameInput": "Ivaan",
+    "priceInput": 12,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 1
+  },
+  {
+    "nameInput": "Coty",
+    "priceInput": 100,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 2
+  },
+  {
+    "nameInput": "Champiñon",
+    "priceInput": 999,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 3
+  },
+  {
+    "nameInput": "Amonchi",
+    "priceInput": 4999,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 4
+  },
+  {
+    "nameInput": "Marvel",
+    "priceInput": 345,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 5
+  },
+  {
+    "nameInput": "Mochila",
+    "priceInput": 543,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 6
+  },
+  {
+    "nameInput": "Zapatillas",
+    "priceInput": 634,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 7
+  },
+  {
+    "nameInput": "Pantalon",
+    "priceInput": 1235,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 8
+  },
+  {
+    "nameInput": "Campera",
+    "priceInput": 2456,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 9
+  },
+  {
+    "nameInput": "Gorra",
+    "priceInput": 13,
+    "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+    "id": 10
+  }
+]
+)
+
+3-// Listar documentos de las colecciones
+
+db.mensajes.find()
+db.productos.find()
+
+4-// Mostrar la cantidad de documentos en cada coleccion
+
+db.mensajes.estimatedDocumentCount()
+db.productos.estimatedDocumentCount()
+
+5-// CRUD en coleccion productos
+    A-// Agregar un producto
+    db.productos.insertOne({
+        "nameInput": "Frazada",
+        "priceInput": 542,
+        "linkInput": "https://cdn2.iconfinder.com/data/icons/leto-blue-big-data/64/big_data_olap_array_multidimentional_volume-256.png",
+        "id": 11
+    })
+
+    B-//Realizar consultas por nombre de producto especifico
+        -//Listar los productos con precio menor a 1000 pesos.
+
+        db.productos.find({"priceInput":{$lt:5}})
+
+        -//Listar los productos con precio entre los 1000 a 3000 pesos.
+        
+        db.productos.find({$and:[{"priceInput":{$gte:1000}},{"priceInput":{$lte:3000}}]})
+        db.productos.find({$and:[{"id":{$gte:2}},{"id":{$lte:5}}]})
+        
+        -//Listar los productos con precio mayor a 3000 pesos.
+        db.productos.find({"priceInput":{$gt:3000}})
+        db.productos.find({"id":{$gt:5}})
+
+        -//Realizar una consulta que traiga sólo el nombre del tercer producto más barato
+        db.productos.find({},{"nameInput":1,"_id":0}).sort({"priceInput":1}).skip(2).limit(1)
+
+    C-//Hacer una actualización sobre todos los productos, agregando el campo stock a todos 
+        ellos con un valor de 100.
+
+        db.productos.updateMany({},{$set: {"stock":100}})
+
+    D-//Cambiar el stock a cero de los productos con precios mayores a 4000 pesos.
+    db.productos.updateMany({"priceInput":{$gt:4000}},{$set:{"stock":0}})
+
+    E-//Borrar los productos con precio menor a 1000 pesos 
+    db.productos.removeMany({"priceInput":{$lt:1000}})
+
+6-//Crear un usuario 'ivan' clave: 'asd456' que sólo pueda leer la base de datos ecommerce
+  use admin
+  db.createUser({"user":"ivan","pwd":"asd456","roles":[{role:"read",db:"ecommerce"}]})
