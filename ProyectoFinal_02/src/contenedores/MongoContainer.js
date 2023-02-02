@@ -1,20 +1,20 @@
 import mongoose from "mongoose";
-import URL from "../config/MongoDB.js"
+import URL from "../config/MongoDB.js";
 
 class MongoContainer{
     constructor(){
 
-    }
+    };
     async connect(){
         try{
-            let res = await mongoose.connect(URL,{
+            await mongoose.connect(URL,{
                 useNewUrlParser:true,
                 UseUnifiedTopology:true
             });
-            console.log(`Conectado a la DB`)
+            console.log(`Conectado a la DB : ${URL}`);
         }catch(err){
             throw new Error(err);
-        }
+        };
     }
     async disconnect(){
         try{
@@ -22,8 +22,8 @@ class MongoContainer{
             console.log(`DB desconectada`);
         }catch(err){
             throw new Error(err);
-        }
-    }
-}
+        };
+    };
+};
 
 export default MongoContainer;
