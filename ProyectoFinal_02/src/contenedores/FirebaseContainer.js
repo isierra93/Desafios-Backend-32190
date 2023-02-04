@@ -43,8 +43,14 @@ class FirebaseContainer {
             throw new Error (err);
         };
     };
-/*     Aca va el put
- */
+    async updateProd(id, obj){
+        try{
+            const res = await this.query.doc(id).update(obj);
+            return res;
+        }catch(err){
+            throw new Error (err);
+        };
+    };
     async deleteById(id){
         try{
             const res = await this.query.doc(id).delete();

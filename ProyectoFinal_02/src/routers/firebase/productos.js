@@ -30,8 +30,15 @@ export class FirebaseProdRouter extends express.Router{
                 throw new Error (err);
             };
         });
-
-
+        this.put(`/:id`, async (req, res, next) =>{
+            try{
+                const { id } = req.params;
+                const obj = req.body;
+                res.json(await productos.updateProd(id, obj));
+            }catch(err){
+                throw new Error (err);
+            };
+        });
         this.delete(`/:id`, async (req, res, next) =>{
             try{
                 const { id } = req.params;
