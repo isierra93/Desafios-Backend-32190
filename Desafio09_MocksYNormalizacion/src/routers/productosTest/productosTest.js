@@ -7,7 +7,7 @@ export class ProductosTest extends express.Router{
 
         this.get(`/`, async (req, res, next) =>{
             try{
-                res.json({productos:generarProductos(5)});
+                res.render(`faker`,{productos: await generarProductos(5)});
             }catch(err){
                 throw new Error (err);
             };

@@ -1,7 +1,9 @@
 import {faker} from "@faker-js/faker";
 
-const generarProductos = (cant) =>{
-    const prods = [];
+const generarProductos = async (cant) =>{
+
+    try{
+        const prods = [];
     let i = 0;
     while(i < cant){
         let prod = {
@@ -11,8 +13,12 @@ const generarProductos = (cant) =>{
         }
         prods.push(prod);
         i++;
-    }
+    };
     return prods;
+
+    }catch(err){
+        throw new Error (err);
+    };
 }
 
 export default  generarProductos;
