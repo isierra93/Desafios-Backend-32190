@@ -3,6 +3,10 @@ import handlebars from "express-handlebars";
 import { Server as HttpServer } from "http";
 import { Server as IOServer } from "socket.io";
 import ProductosTest from "./routers/productosTest/productosTest.js";
+import { normalize } from "normalizr";
+import messagesSchema from "../src/utils/normalizr.js";
+
+import util from "util";
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -42,6 +46,20 @@ io.on(`connection`, async (socket) =>{
     });
     //Envia los mensajes almacenados
     const mensajes = await mensajesContainer.getAll();
+
+    
+
+    function print(objeto){
+        console.log(util.inspect(objeto, false, 12, true))
+    }
+    const listMensajes = {
+        id: "coder",
+        mensajes: mensajes
+    }
+    const mensajesNormalizados = normalize(listMensajes, messagesSchema);
+    print(mensajesNormalizados)
+    
+
     socket.emit(`mensajes`, mensajes);
     //Escucha los nuevos mensajes, los guarda y los envia a los sockets conectados
     socket.on(`new-msg`, async (msg) =>{

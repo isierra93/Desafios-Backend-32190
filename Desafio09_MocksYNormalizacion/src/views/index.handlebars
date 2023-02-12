@@ -27,12 +27,32 @@
         <h1 class="text-center" style="color:blue;">Centro de mensajes</h1>
         <form>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="form-control">
+                <label for="idUser">Email</label>
+                <input type="email" id="idUser" name="idUser" class="form-control">
             </div>
             <div class="form-group">
-                <label for="mensajeInput">Mensaje:</label>
-                <input type="text" id="mensajeInput" name="mensajeInput" class="form-control">
+                <label for="nameUser">Nombre</label>
+                <input type="text" id="nameUser" name="nameUser" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="lastNameUser">Apellido</label>
+                <input type="text" id="lastNameUser" name="lastNameUser" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="ageUser">Edad</label>
+                <input type="number" id="ageUser" name="ageUser" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="nickNameUser">Alias</label>
+                <input type="text" id="nickNameUser" name="nickNameUser" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="avatarUser">Avatar</label>
+                <input type="text" id="avatarUser" name="avatarUser" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="textMsg">Mensaje:</label>
+                <input type="text" id="textMsg" name="textMsg" class="form-control">
             </div>
             <button class="btn btn-success mt-3 mb-5" onclick="return addMessage()">Enviar</button>
         </form>
