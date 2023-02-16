@@ -2,11 +2,10 @@ import express from "express"
 import handlebars from "express-handlebars";
 import { Server as HttpServer } from "http";
 import { Server as IOServer } from "socket.io";
+import Index from "../src/routers/index/index.js"
 import ProductosTest from "./routers/productosTest/productosTest.js";
 import { normalize } from "normalizr";
 import messagesSchema from "../src/utils/normalizr.js";
-
-import util from "util";
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -21,7 +20,7 @@ const mensajesContainer = new ContenedorJSON(`Mensajes`, `json`);
 //---------------------------------------------------//
 
 //Se define ruta de archivos estaticos, se accedera bajo el prefijo virtual /static/:archivo
-app.use(express.static(`./public`));
+app.use(express.static("public"));
 
 //Configuracion Handlebars
 app.engine(`handlebars`, handlebars.engine());
@@ -44,28 +43,18 @@ io.on(`connection`, async (socket) =>{
         const productos = await productosContainer.getAll()
         io.sockets.emit(`productos`, productos)
     });
-    //Envia los mensajes almacenados
-    const mensajes = await mensajesContainer.getAll();
 
-    
-
-    function print(objeto){
-        console.log(util.inspect(objeto, false, 12, true))
-    }
-    const listMensajes = {
-        id: "coder",
-        mensajes: mensajes
-    }
-    const mensajesNormalizados = normalize(listMensajes, messagesSchema);
-    print(mensajesNormalizados)
-    
-
-    socket.emit(`mensajes`, mensajes);
+    //Normaliza los mensajes almacenados y luego los envia
+    const mensajesSinNormalizar = await mensajesContainer.getAll();
+    const mensajesNormalizados = normalize({id:"coder", mensajes:mensajesSinNormalizar}, messagesSchema);
+    const porcentaje = (JSON.stringify(mensajesNormalizados).length/JSON.stringify(mensajesSinNormalizar).length)*100
+    socket.emit(`mensajes`, mensajesNormalizados,porcentaje);
     //Escucha los nuevos mensajes, los guarda y los envia a los sockets conectados
     socket.on(`new-msg`, async (msg) =>{
         await mensajesContainer.save(msg);
         const mensajes = await mensajesContainer.getAll();
-        io.sockets.emit(`mensajes`, mensajes);
+        const mensajesNormalizados = normalize({id:"coder", mensajes:mensajes}, messagesSchema);
+        io.sockets.emit(`mensajes`, mensajesNormalizados);
     });
 });
 
@@ -75,8 +64,7 @@ httpServer.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto: ${PORT}`);
 });
 
-app.get(`/`, async (req, res) => {
-    res.render(`index`);
-});
 
+//Routers
+app.use(`/`, new Index());
 app.use(`/api/productos-test`, new ProductosTest());

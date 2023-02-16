@@ -70,5 +70,41 @@
     },
     "text": "Amonchiii",
     "id": 6
+  },
+  {
+    "author": {
+      "id": "Amon@sierra",
+      "nombre": "Amon",
+      "apellido": "Sierra",
+      "edad": "3",
+      "alias": "Amonchi",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/767.jpg"
+    },
+    "text": "MAU",
+    "id": 7
+  },
+  {
+    "author": {
+      "id": "Amon@sierra",
+      "nombre": "Amon",
+      "apellido": "Sierra",
+      "edad": "4",
+      "alias": "Amon",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/767.jpg"
+    },
+    "text": "Funcionando al 100%!",
+    "id": 8
+  },
+  {
+    "author": {
+      "id": "Amon@sierra",
+      "nombre": "Amon",
+      "apellido": "Sierra",
+      "edad": "4",
+      "alias": "Amon",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/767.jpg"
+    },
+    "text": "Git push!",
+    "id": 9
   }
 ]

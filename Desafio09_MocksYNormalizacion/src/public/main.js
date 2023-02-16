@@ -36,17 +36,13 @@ socket.on(`productos`, (productos) => {
   document.getElementById("tableProductos").innerHTML = html;
 });
 
-//Recibe los mensajes almacenados y los impacta en el DOM
-socket.on(`mensajes`, (mensajes) => {
-  /* const listMensajes = {
-    id: "coder",
-    mensajes: msg
-} */
-  /* const mensajes = denormalize(mensajesNormalizados, messagesSchema); */
-
-  let html = `<h3 class="alert alert-danger text-center">No se encontraron productos</h3>`;
+//Recibe los mensajes normalizados almacenados, los desnormaliza y los impacta en el DOM
+socket.on(`mensajes`, async (mensajesNormalizados,porcentaje) => {
+  document.getElementById("compressionPorcentaje").innerText = `(Porcentaje de compresion: % ${porcentaje} )`;
+  const mensajes = await normalizr.denormalize(mensajesNormalizados.result, messagesSchema, mensajesNormalizados.entities);
+  let html = `<h3 class="alert alert-danger text-center">No se encontraron mensajes</h3>`;
   if (mensajes) {
-    html = mensajes.map(msg => {
+    html = mensajes.mensajes.map(msg => {
       return `<div><strong style="color: blue;">${msg.author.nombre}</strong> [<img style="height: 2rem; width: 2rem;" src=${msg.author.avatar} >] : ${msg.text}</div>`
     }).join(``);
   };
@@ -63,36 +59,28 @@ function addProduct() {
       nameInput: nameInput.value,
       priceInput: priceInput.value,
       linkInput: linkInput.value
-    }
+    };
     socket.emit(`new-prod`, product);
     nameInput.value = ``;
     priceInput.value = ``;
     linkInput.value = ``;
   };
   return false;
-}
+};
 
-// SIMPLIFICAR ACA LA CREACION DE OBJ!!!
 function addMessage() {
-  const idUser = document.getElementById("idUser").value;
-  const nameUser = document.getElementById("nameUser").value;
-  const lastNameUser = document.getElementById("lastNameUser").value;
-  const ageUser = document.getElementById("ageUser").value;
-  const nickNameUser = document.getElementById("nickNameUser").value;
-  const avatarUser = document.getElementById("avatarUser").value;
-  const textMsg = document.getElementById("textMsg").value;
   const obj = {
     author: {
-      id: idUser,
-      nombre: nameUser,
-      apellido: lastNameUser,
-      edad: ageUser,
-      alias: nickNameUser,
-      avatar: avatarUser
+      id: document.getElementById("idUser").value,
+      nombre: document.getElementById("nameUser").value,
+      apellido: document.getElementById("lastNameUser").value,
+      edad: document.getElementById("ageUser").value,
+      alias: document.getElementById("nickNameUser").value,
+      avatar: document.getElementById("avatarUser").value
     },
-    text: textMsg
+    text: document.getElementById("textMsg").value
   };
   socket.emit('new-msg', obj);
-  textMsg.value = "";
-  return false
-}
+  document.getElementById("textMsg").value = "";
+  return false;
+};
