@@ -4,11 +4,12 @@ import { Server as HttpServer } from "http";
 import { Server as IOServer } from "socket.io";
 import Index from "../src/routers/index/index.js";
 import Login from "../src/routers/login/login.js";
+import Logout from "../src/routers/logout/logout.js"
 import { normalize } from "normalizr";
 import messagesSchema from "../src/utils/normalizr.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import auth from "../src/utils/auth.js"
+
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -38,10 +39,13 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 //Sessions
 app.use(session({
-    secret:"123",
+    secret:"am423o8hMF87Y1FKhdYH97",
     resave:true,
-    saveUninitialized:true
-}))
+    saveUninitialized:true,
+    cookie:{
+        maxAge: 60000
+    }
+}));
 
 //Socket - "connection" se ejecuta la primera vez que se abre una nueva conexion
 io.on(`connection`, async (socket) =>{
@@ -80,3 +84,4 @@ httpServer.listen(PORT, () =>{
 //Routers
 app.use(`/`, new Index());
 app.use(`/login`, new Login());
+app.use(`/logout`, new Logout());

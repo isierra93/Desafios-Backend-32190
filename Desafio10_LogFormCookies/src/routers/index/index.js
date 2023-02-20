@@ -7,6 +7,7 @@ export class Index extends express.Router{
         this.get(`/`, async (req, res, next) =>{
             try{
                 if(req.session.nameSession){
+                    req.session.cookie.maxAge = 60000;
                     return res.render(`index`,{name: req.session.nameSession } );
                 }
                 res.redirect(`/login`);
