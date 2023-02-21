@@ -9,7 +9,7 @@ import { normalize } from "normalizr";
 import messagesSchema from "../src/utils/normalizr.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-
+import mongoAtlas from "../src/config/mongoAtlasConnect.js"
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -23,7 +23,7 @@ const productosContainer = new ContenedorJSON(`Productos`,`json`);
 const mensajesContainer = new ContenedorJSON(`Mensajes`, `json`);
 //---------------------------------------------------//
 
-//Se define ruta de archivos estaticos, se accedera bajo el prefijo virtual /static/:archivo
+//Se define ruta de archivos estaticos
 app.use(express.static("public"));
 
 //Configuracion Handlebars
@@ -35,17 +35,9 @@ app.set(`view engine`, `handlebars`);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-//Cookies
+//Cookies y Sessions con persistencia en MongoAtlas
 app.use(cookieParser());
-//Sessions
-app.use(session({
-    secret:"am423o8hMF87Y1FKhdYH97",
-    resave:true,
-    saveUninitialized:true,
-    cookie:{
-        maxAge: 60000
-    }
-}));
+app.use(session(mongoAtlas));
 
 //Socket - "connection" se ejecuta la primera vez que se abre una nueva conexion
 io.on(`connection`, async (socket) =>{
@@ -63,7 +55,7 @@ io.on(`connection`, async (socket) =>{
     //Normaliza los mensajes almacenados y luego los envia
     const mensajesSinNormalizar = await mensajesContainer.getAll();
     const mensajesNormalizados = normalize({id:"coder", mensajes:mensajesSinNormalizar}, messagesSchema);
-    const porcentaje = (JSON.stringify(mensajesNormalizados).length/JSON.stringify(mensajesSinNormalizar).length)*100
+    const porcentaje = Math.round((JSON.stringify(mensajesNormalizados).length/JSON.stringify(mensajesSinNormalizar).length)*100);
     socket.emit(`mensajes`, mensajesNormalizados,porcentaje);
     //Escucha los nuevos mensajes, los guarda y los envia a los sockets conectados
     socket.on(`new-msg`, async (msg) =>{
@@ -79,7 +71,6 @@ const PORT = process.env.PORT || 8080;
 httpServer.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto: ${PORT}`);
 });
-
 
 //Routers
 app.use(`/`, new Index());
