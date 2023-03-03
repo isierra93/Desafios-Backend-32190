@@ -1,29 +1,29 @@
 <div class="container-fluid mt-3">
   <h1 class="text-center">Registrar usuario</h1>
-  <form action="/login" method="post">
+  <form action="/signup" method="post">
     <div class="form-group mb-2">
-      <label for="nameSession">Email</label>
+      <label for="username">Email</label>
       <input
         type="text"
-        id="nameSession"
-        name="nameSession"
+        id="username"
+        name="username"
         class="form-control"
         required
       />
     </div>
     <div class="form-group mb-2">
-      <label for="nameSession">Contraseña</label>
+      <label for="password">Contraseña</label>
       <input
         type="text"
-        id="nameSession"
-        name="nameSession"
+        id="password"
+        name="password"
         class="form-control"
         required
       />
     </div>
     <button type="submit" class="btn btn-success mt-3 mb-3">Registrar</button>
   </form>
-  <form action="/logout" method="get">
-    <button id="buttonLogOut" class="btn btn-warning">Iniciar sesion</button>
+  <form action="/login" method="get">
+    <button id="buttonLogOut" class="btn btn-warning">Ir a iniciar sesion</button>
   </form>
 </div>

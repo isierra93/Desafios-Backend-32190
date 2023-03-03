@@ -1,7 +1,7 @@
 //Import de libreria FS
 import fs from "fs"
 
-export class ContenedorJSON{
+class ContenedorJSON{
     //Se declara contenedor, con el nombre del archivo y su extension
     constructor(nameFile, extension=`json`){
         this.nameFile = nameFile,
@@ -128,4 +128,8 @@ export class ContenedorJSON{
     };
 };
 
-export default ContenedorJSON;
+const productosContainer = new ContenedorJSON(`Productos`);
+const mensajesContainer = new ContenedorJSON(`Mensajes`);
+const usuariosContainer = new ContenedorJSON(`Usuarios`);
+
+export {productosContainer, mensajesContainer, usuariosContainer};

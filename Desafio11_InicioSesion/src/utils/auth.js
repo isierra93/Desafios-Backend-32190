@@ -1,10 +1,16 @@
-function auth (req, res, next) {
-    console.log(`Se llamo a AUTH ${req.session.nameSession}`)
-    if(req.session?.nameSession){
-        
-        return next()
-    };
-    return res.render(`login`);
+export function checkAuthentication ( req, res, next){
+    if(req.isAuthenticated()){
+        next();
+    }else{
+        res.redirect("/login");
+    }
 };
 
-export default auth;
+export async function getLogOut(req, res, next){
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        next();
+      });
+}
+
+export default {checkAuthentication, getLogOut};

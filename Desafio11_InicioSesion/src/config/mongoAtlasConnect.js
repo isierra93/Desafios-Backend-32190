@@ -10,7 +10,7 @@ const mongoAtlas = {
   resave: true,
   saveUninitialized: true,
   cookie: {
-    maxAge: 60000,
+    maxAge: 600000,
   },
 };
 
