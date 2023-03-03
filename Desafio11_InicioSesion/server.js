@@ -8,7 +8,7 @@ import messagesSchema from "./src/utils/normalizr.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoAtlas from "./src/config/mongoAtlasConnect.js";
-import {hashPassword, unHashPassword} from "./src/utils/bcrypt.js"
+import passport from "passport";
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -39,61 +39,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session(mongoAtlas));
 
-import passport from "passport";
-import { checkAuthentication, getLogOut } from "./src/utils/auth.js";
-import { Strategy as LocalStrategy } from "passport-local";
-
 //Passport Strategy
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(
-  "login",
-  new LocalStrategy(
-    {
-      usernameField: "username",
-      passwordField: "password",
-    },
-    async (username, password, done) => {
-      const usuarios = await usuariosContainer.getAll();
-      const user = usuarios.find((user) => user.username == username) || null;
-      console.log("Usuario: " + username + " Contraseña: " + password);
-      if (!user) {
-        console.log("NOT USER FOUND");
-        return done(null, false, { message: "Not User Found" });
-      }
-      if (await unHashPassword(password, user.password)) {
-        console.log(user);
-        return done(null, user);
-      }
-      console.log("NOT PW MATCH");
-      return done(null, false, { message: "Incorrect password" });
-    }
-  )
-);
-
-passport.use(
-  "signup",
-  new LocalStrategy(
-    {
-      usernameField: "username",
-      passwordField: "password",
-    },
-    async (username, password, done) => {
-      const usuarios = await usuariosContainer.getAll();
-      const user = usuarios.find((user) => user.username == username) || null;
-      console.log("Usuario: " + username + " Contraseña: " + password);
-      if (!user) {
-        const newUser = { username: username, password: await hashPassword(password) };
-        return done(null, await usuariosContainer.save(newUser));
-      }
-      if (user) {
-        console.log("USER REGISTRADO");
-        return done(null, false, {message: "Usuario ya registrado"});
-      }
-    }
-  )
-);
+import "./src/config/passport.js"
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
