@@ -8,6 +8,7 @@ import messagesSchema from "./src/utils/normalizr.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoAtlas from "./src/config/mongoAtlasConnect.js";
+import {hashPassword, unHashPassword} from "./src/utils/bcrypt.js"
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -61,7 +62,7 @@ passport.use(
         console.log("NOT USER FOUND");
         return done(null, false, { message: "Not User Found" });
       }
-      if (user.password == password) {
+      if (await unHashPassword(password, user.password)) {
         console.log(user);
         return done(null, user);
       }
@@ -83,7 +84,7 @@ passport.use(
       const user = usuarios.find((user) => user.username == username) || null;
       console.log("Usuario: " + username + " Contraseña: " + password);
       if (!user) {
-        const newUser = { username: username, password: password };
+        const newUser = { username: username, password: await hashPassword(password) };
         return done(null, await usuariosContainer.save(newUser));
       }
       if (user) {
@@ -102,77 +103,6 @@ passport.deserializeUser(async (id, done) => {
   const user = await usuariosContainer.getById(id);
   done(null, user);
 });
-
-//Rutas
-app.get("/", checkAuthentication, async (req, res, next) => {
-  try {
-    res.render("index", { script: "main", name: req.user.username });
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-
-app.get("/login", async (req, res, next) => {
-  try {
-    res.render("login");
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-
-app.post(
-  "/login",
-  passport.authenticate("login", {
-    failureRedirect: `/failsignin`,
-    successRedirect: `/`,
-  })
-);
-
-app.get("/failsignin", async (req, res, next) => {
-  try {
-    res.render("failsignin" , {script: "redirect"});
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-
-app.get("/logout", getLogOut, async (req, res, next) => {
-  try {
-    res.render("logout", { script: "redirect" });
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-
-app.get("/signup", async (req, res, next) => {
-  try {
-    res.render("signup");
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-
-app.post(
-  "/signup",
-  passport.authenticate("signup", {
-    failureRedirect: `/failsignup`,
-    successRedirect: `/login`,
-  })
-);
-
-app.get("/failsignup", async (req, res, next) =>{
-  try {
-    res.render("failsignup", {script: "redirect"});
-  } catch (error) {
-    throw new Error (error);
-  }
-})
-
-app.get("*", async (req, res) =>{
-  const { originalUrl, method } = req;
-  console.log(`Ruta ${method} ${originalUrl} no implementada.`);
-  res.redirect(`/`);
-})
 
 //Socket - "connection" se ejecuta la primera vez que se abre una nueva conexion
 io.on(`connection`, async (socket) => {
@@ -216,3 +146,5 @@ const PORT = process.env.PORT || 8080;
 httpServer.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto: ${PORT}`);
 });
+
+app.use(`/`, new Routers());

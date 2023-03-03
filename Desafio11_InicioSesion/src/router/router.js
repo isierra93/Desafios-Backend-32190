@@ -1,60 +1,80 @@
 import express from "express";
 import passport from "passport";
+import { checkAuthentication, getLogOut } from "../utils/auth.js";
 
-export class Routers extends express.Router{
-    constructor(){
-        super();
-        //Index
-        this.get(`/`, async (req, res, next) =>{
-            try{
-                const { username } = req.body;
-                
-                res.render(`index`)
-            }catch(err){
-                throw new Error(err);
-            };
-        });
-        //Login
-        this.get(`/login`,passport.authenticate(`login`, {failureRedirect:`/login`, successRedirect:`/index`}), async (req, res, next) => {
-            try {
-                res.render(`login`);
-            } catch (err) {
-                throw new Error(err);
-            };
-        });
-        this.post(`/login`, async (req, res, next) => {
-            try {
-                const { username } = req.body;
-                req.session.username = username
-                res.redirect(`/`)
-            } catch (err) {
-                throw new Error(err);
-            };
-        });
-        //Logout
-        this.get(`/logout`, async (req, res, next) => {
-            try {
-                const name = req.session.username;
-                req.session.destroy(err => {
-                    if (err) {
-                        return res.json({ status: `Logout ERROR`, body: err });
-                    };
-                    res.render(`logout`, { name: name,script: `redirect` });
-                });
-            } catch (err) {
-                throw new Error(err);
-            };
-        });
-        //Signup------------
-        this.get(`/signup`, async (req, res, next) =>{
-            try{
-                res.render(`signup`);
-            }catch(err){
-                throw new Error (err);
-            };
-        });
+export class Routers extends express.Router {
+  constructor() {
+    super();
+    this.get("/", checkAuthentication, async (req, res, next) => {
+      try {
+        res.render("index", { script: "main", name: req.user.username });
+      } catch (error) {
+        throw new Error(error);
+      }
+    });
 
-    };
-};
+    this.get("/login", async (req, res, next) => {
+      try {
+        res.render("login");
+      } catch (error) {
+        throw new Error(error);
+      }
+    });
+
+    this.post(
+      "/login",
+      passport.authenticate("login", {
+        failureRedirect: `/failsignin`,
+        successRedirect: `/`,
+      })
+    );
+
+    this.get("/failsignin", async (req, res, next) => {
+      try {
+        res.render("failsignin", { script: "redirect" });
+      } catch (error) {
+        throw new Error(error);
+      }
+    });
+
+    this.get("/logout", getLogOut, async (req, res, next) => {
+      try {
+        res.render("logout", { script: "redirect" });
+      } catch (error) {
+        throw new Error(error);
+      }
+    });
+
+    this.get("/signup", async (req, res, next) => {
+      try {
+        res.render("signup");
+      } catch (error) {
+        throw new Error(error);
+      }
+    });
+
+    this.post(
+      "/signup",
+      passport.authenticate("signup", {
+        failureRedirect: `/failsignup`,
+        successRedirect: `/login`,
+      })
+    );
+
+    this.get("/failsignup", async (req, res, next) => {
+      try {
+        res.render("failsignup", { script: "redirect" });
+      } catch (error) {
+        throw new Error(error);
+      }
+    });
+
+    this.get("*", async (req, res) => {
+      const { originalUrl, method } = req;
+      console.log(`Ruta ${method} ${originalUrl} no implementada.`);
+      res.redirect(`/`);
+    });
+  }
+}
 
 export default Routers;

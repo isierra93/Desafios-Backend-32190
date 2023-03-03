@@ -1,27 +1,12 @@
 [
   {
-    "username": "sierraivan93@gmail.com",
-    "password": "asd",
-    "id": 1
-  },
-  {
-    "username": "amon",
-    "password": "321123",
+    "username": "ivan@com",
+    "password": "$2a$08$vkMRcUYmUKgZdjbXFjRW9eJM0juNanrMjpTxmjgoQKgcKSTXQlsKO",
     "id": 2
   },
   {
-    "username": "champi",
-    "password": "kkkk",
-    "id": 3
-  },
-  {
-    "username": "ivan@com",
-    "password": "asd",
-    "id": 4
-  },
-  {
     "username": "asd@asddasd.ar",
-    "password": "dsad",
-    "id": 5
+    "password": "$2a$08$U6WXhwGwJ4VwTH3fKkDwwuW/RdNkSLvrdTOMM4A.iTKmG6z9eBOJy",
+    "id": 3
   }
 ]
