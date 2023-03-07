@@ -71,7 +71,7 @@ export class Routers extends express.Router {
 
     this.get("*", async (req, res) => {
       const { originalUrl, method } = req;
-      console.log(`Ruta ${method} ${originalUrl} no implementada.`);
+      console.log(`Ruta ${method} - ${originalUrl} no implementada.`);
       res.redirect(`/`);
     });
   }

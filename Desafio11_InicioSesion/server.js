@@ -18,9 +18,9 @@ const io = new IOServer(httpServer);
 //Importar contenedor
 import {
   productosContainer,
-  mensajesContainer,
-  usuariosContainer,
+  mensajesContainer
 } from "./src/contenedores/ContenedorJSON.js";
+import usuariosDB from "./src/contenedores/mongo/usuariosContainer.js";
 //---------------------------------------------------//
 
 //Se define ruta de archivos estaticos
@@ -46,11 +46,11 @@ app.use(passport.session());
 import "./src/config/passport.js"
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user.username);
 });
 
-passport.deserializeUser(async (id, done) => {
-  const user = await usuariosContainer.getById(id);
+passport.deserializeUser(async (email, done) => {
+  const user = await usuariosDB.getByEmail(email);
   done(null, user);
 });
 
