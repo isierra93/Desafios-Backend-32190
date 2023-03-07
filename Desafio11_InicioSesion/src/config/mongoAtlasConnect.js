@@ -1,5 +1,5 @@
 import MongoStore from "connect-mongo";
-import URL from "./MongoURL.js"
+import URL from "./MongoURL.js";
 
 const mongoAtlas = {
   store: MongoStore.create({

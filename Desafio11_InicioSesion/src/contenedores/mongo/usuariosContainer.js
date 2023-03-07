@@ -41,32 +41,8 @@ class Usuarios extends MongoContainer {
             this.disconnect();
         };
     };
-    //Modificar producto
-    async updateUser(id, obj){
-        try{
-            await this.connect();
-            let res = await model.usuarios.updateOne({_id:id},obj);
-            return res;
-        }catch(err){
-            throw new Error(err);
-        }finally{
-            this.disconnect();
-        };
-    };
-    //Borrar un producto por ID
-    async deleteById(id){
-        try{
-            await this.connect();
-            let res = await model.usuarios.deleteOne({_id:id});
-            return res;
-        }catch(err){
-            throw new Error(err);
-        }finally{
-            this.disconnect();
-        };
-    };
 };
 
-const usuariosDB = new Usuarios()
+const usuariosDB = new Usuarios();
 
 export default usuariosDB;
