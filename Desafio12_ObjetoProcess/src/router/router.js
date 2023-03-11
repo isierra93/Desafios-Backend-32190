@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { checkAuthentication, getLogOut } from "../utils/auth.js";
+import returnInfo from "../utils/info.js"
 
 export class Routers extends express.Router {
   constructor() {
@@ -69,11 +70,11 @@ export class Routers extends express.Router {
       }
     });
 
-    this.get("*", async (req, res) => {
+/*     this.get("*", async (req, res) => {
       const { originalUrl, method } = req;
       console.log(`Ruta ${method} - ${originalUrl} no implementada.`);
       res.redirect(`/`);
-    });
+    }); */
   }
 }
 

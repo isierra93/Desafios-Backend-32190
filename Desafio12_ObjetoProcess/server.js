@@ -3,19 +3,19 @@ import handlebars from "express-handlebars";
 import { Server as HttpServer } from "http";
 import { Server as IOServer } from "socket.io";
 import Routers from "./src/router/router.js";
+import InfoRouter from "./src/router/info.js";
+import APIRandomRouter from "./src/router/apiRandom.js";
 import { normalize } from "normalizr";
 import messagesSchema from "./src/utils/normalizr.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoAtlas from "./src/config/mongoAtlasConnect.js";
 import passport from "passport";
-import dotenv from "dotenv";
-
+import argv from "./src/utils/yargs.js"
 
 const app = express();
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
-dotenv.config();
 
 //---------------------------------------------------//
 //Importar contenedor
@@ -95,9 +95,11 @@ io.on(`connection`, async (socket) => {
 });
 
 //Sever ON con handle de error de inicio
-const PORT = process.env.PORT || 8080;
+const PORT = argv.PORT
 httpServer.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto: ${PORT}`);
 });
 
-app.use(`/`, new Routers());
+app.use('/', new Routers());
+app.use('/info', new InfoRouter());
+app.use('/randoms', new APIRandomRouter());
