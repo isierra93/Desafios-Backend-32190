@@ -11,7 +11,11 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoAtlas from "./src/config/mongoAtlasConnect.js";
 import passport from "passport";
-import argv from "./src/utils/yargs.js"
+import cluster from "cluster";
+
+if(cluster.isPrimary){
+  console.log(cluster);
+}
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -47,6 +51,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 import "./src/config/passport.js"
+import { DOT_ENV } from "./src/config/config.js";
 
 passport.serializeUser((user, done) => {
   done(null, user.username);
@@ -95,9 +100,8 @@ io.on(`connection`, async (socket) => {
 });
 
 //Sever ON con handle de error de inicio
-const PORT = argv.PORT
-httpServer.listen(PORT, () => {
-  console.log(argv);
+httpServer.listen(DOT_ENV.PORT, () => {
+  console.log(`Servidor escuchando en el puerto: ${DOT_ENV.PORT} PID: ${process.pid}.\nIniciado en MODO: ${DOT_ENV.MODO}.`);
 });
 
 app.use('/', new Routers());

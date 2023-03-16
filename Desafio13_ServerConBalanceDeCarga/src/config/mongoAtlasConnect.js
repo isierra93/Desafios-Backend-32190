@@ -1,13 +1,13 @@
 import MongoStore from "connect-mongo";
-import {URL,SECRET} from "./config.js";
+import {DOT_ENV} from "../config/config.js"
 
 const mongoAtlas = {
   store: MongoStore.create({
     mongoUrl:
-      URL,
+    DOT_ENV.URL,
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
   }),
-  secret: SECRET,
+  secret: DOT_ENV.SECRET,
   resave: true,
   saveUninitialized: true,
   cookie: {

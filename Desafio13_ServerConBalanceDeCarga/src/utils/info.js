@@ -1,4 +1,5 @@
-import argv from "./yargs.js";
+import {argv} from "../config/config.js";
+import os from "os"
 
 const returnInfo = async () =>{
     const data = {
@@ -9,6 +10,7 @@ const returnInfo = async () =>{
         pathExec: process.execPath,
         IDprocess: process.pid,
         path: process.cwd(),
+        numberOfProcessors: os.cpus().length
     };
     return data;
 };

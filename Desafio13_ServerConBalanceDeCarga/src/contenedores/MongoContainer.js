@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {URL} from "../config/config.js";
+import {DOT_ENV} from "../config/config.js"
 
 class MongoContainer{
     constructor(){
@@ -7,11 +7,11 @@ class MongoContainer{
     };
     async connect(){
         try{
-            await mongoose.connect(URL,{
+            await mongoose.connect(DOT_ENV.URL,{
                 useNewUrlParser:true,
                 UseUnifiedTopology:true
             });
-            console.log(`Conectado a la DB : ${URL}`);
+            console.log(`Conectado a la DB : ${DOT_ENV.URL}`);
         }catch(err){
             throw new Error(err);
         };
