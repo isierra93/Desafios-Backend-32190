@@ -11,99 +11,115 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoAtlas from "./src/config/mongoAtlasConnect.js";
 import passport from "passport";
+import { DOT_ENV } from "./src/config/config.js";
 import cluster from "cluster";
-
-if(cluster.isPrimary){
-  console.log(cluster);
-}
-
-const app = express();
-const httpServer = new HttpServer(app);
-const io = new IOServer(httpServer);
+import os from "os";
 
 //---------------------------------------------------//
 //Importar contenedor
 import {
   productosContainer,
-  mensajesContainer
+  mensajesContainer,
 } from "./src/contenedores/ContenedorJSON.js";
 import usuariosDB from "./src/contenedores/mongo/usuariosContainer.js";
 //---------------------------------------------------//
+import "./src/config/passport.js";
 
-//Se define ruta de archivos estaticos
-app.use(express.static("./src/public"));
+if (DOT_ENV.MODE !== 'FORK' && DOT_ENV.MODE !== 'CLUSTER') {
+  console.log(`El MODE: "${DOT_ENV.MODE}" es inválido. Opciones: "FORK"(default) || "CLUSTER" .`);
+  process.exit(0)
+}
 
-//Configuracion Handlebars
-app.engine(`handlebars`, handlebars.engine());
-app.set(`views`, `./src/views`);
-app.set(`view engine`, `handlebars`);
+if (DOT_ENV.MODE == 'CLUSTER' && cluster.isPrimary) {
+  console.log(`Master ${process.pid} is runing.`);
+  const numCPUs = os.cpus().length;
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
 
-//Para que el servidor pueda interpretar automaticamente objetos en JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
+    cluster.fork();
+  });
+} else {
+  const app = express();
+  const httpServer = new HttpServer(app);
+  const io = new IOServer(httpServer);
 
-//Cookies y Sessions con persistencia en MongoAtlas
-app.use(cookieParser());
-app.use(session(mongoAtlas));
+  //Se define ruta de archivos estaticos
+  app.use(express.static("./src/public"));
 
-//Passport Strategy
-app.use(passport.initialize());
-app.use(passport.session());
+  //Configuracion Handlebars
+  app.engine(`handlebars`, handlebars.engine());
+  app.set(`views`, `./src/views`);
+  app.set(`view engine`, `handlebars`);
 
-import "./src/config/passport.js"
-import { DOT_ENV } from "./src/config/config.js";
+  //Para que el servidor pueda interpretar automaticamente objetos en JSON
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-passport.serializeUser((user, done) => {
-  done(null, user.username);
-});
+  //Cookies y Sessions con persistencia en MongoAtlas
+  app.use(cookieParser());
+  app.use(session(mongoAtlas));
 
-passport.deserializeUser(async (email, done) => {
-  const user = await usuariosDB.getByEmail(email);
-  done(null, user);
-});
+  //Passport Strategy
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-//Socket - "connection" se ejecuta la primera vez que se abre una nueva conexion
-io.on(`connection`, async (socket) => {
-  console.log(`Un usuario se ha conectado`);
-  //Envia los productos almacenados
-  const productos = await productosContainer.getAll();
-  socket.emit(`productos`, productos);
-  //Escucha los nuevos productos, los guarda y envia a los sockets conectados
-  socket.on(`new-prod`, async (prod) => {
-    await productosContainer.save(prod);
-    const productos = await productosContainer.getAll();
-    io.sockets.emit(`productos`, productos);
+  passport.serializeUser((user, done) => {
+    done(null, user.username);
   });
 
-  //Normaliza los mensajes almacenados y luego los envia
-  const mensajesSinNormalizar = await mensajesContainer.getAll();
-  const mensajesNormalizados = normalize(
-    { id: "coder", mensajes: mensajesSinNormalizar },
-    messagesSchema
-  );
-  const porcentaje = Math.round(
-    (JSON.stringify(mensajesNormalizados).length /
-      JSON.stringify(mensajesSinNormalizar).length) *
-      100
-  );
-  socket.emit(`mensajes`, mensajesNormalizados, porcentaje);
-  //Escucha los nuevos mensajes, los guarda y los envia a los sockets conectados
-  socket.on(`new-msg`, async (msg) => {
-    await mensajesContainer.save(msg);
-    const mensajes = await mensajesContainer.getAll();
+  passport.deserializeUser(async (email, done) => {
+    const user = await usuariosDB.getByEmail(email);
+    done(null, user);
+  });
+
+  //Socket - "connection" se ejecuta la primera vez que se abre una nueva conexion
+  io.on(`connection`, async (socket) => {
+    console.log(`Un usuario se ha conectado`);
+    //Envia los productos almacenados
+    const productos = await productosContainer.getAll();
+    socket.emit(`productos`, productos);
+    //Escucha los nuevos productos, los guarda y envia a los sockets conectados
+    socket.on(`new-prod`, async (prod) => {
+      await productosContainer.save(prod);
+      const productos = await productosContainer.getAll();
+      io.sockets.emit(`productos`, productos);
+    });
+
+    //Normaliza los mensajes almacenados y luego los envia
+    const mensajesSinNormalizar = await mensajesContainer.getAll();
     const mensajesNormalizados = normalize(
-      { id: "coder", mensajes: mensajes },
+      { id: "coder", mensajes: mensajesSinNormalizar },
       messagesSchema
     );
-    io.sockets.emit(`mensajes`, mensajesNormalizados);
+    const porcentaje = Math.round(
+      (JSON.stringify(mensajesNormalizados).length /
+        JSON.stringify(mensajesSinNormalizar).length) *
+        100
+    );
+    socket.emit(`mensajes`, mensajesNormalizados, porcentaje);
+    //Escucha los nuevos mensajes, los guarda y los envia a los sockets conectados
+    socket.on(`new-msg`, async (msg) => {
+      await mensajesContainer.save(msg);
+      const mensajes = await mensajesContainer.getAll();
+      const mensajesNormalizados = normalize(
+        { id: "coder", mensajes: mensajes },
+        messagesSchema
+      );
+      io.sockets.emit(`mensajes`, mensajesNormalizados);
+    });
   });
-});
 
-//Sever ON con handle de error de inicio
-httpServer.listen(DOT_ENV.PORT, () => {
-  console.log(`Servidor escuchando en el puerto: ${DOT_ENV.PORT} PID: ${process.pid}.\nIniciado en MODO: ${DOT_ENV.MODO}.`);
-});
+  //Sever ON con handle de error de inicio
+  httpServer.listen(DOT_ENV.PORT, () => {
+    console.log(
+      `Servidor escuchando en el puerto: ${DOT_ENV.PORT} PID: ${process.pid}.\nIniciado en MODE: ${DOT_ENV.MODE}.`
+    );
+  });
 
-app.use('/', new Routers());
-app.use('/info', new InfoRouter());
-app.use('/randoms', new APIRandomRouter());
+  app.use("/", new Routers());
+  app.use("/info", new InfoRouter());
+  app.use("/randoms", new APIRandomRouter());
+}

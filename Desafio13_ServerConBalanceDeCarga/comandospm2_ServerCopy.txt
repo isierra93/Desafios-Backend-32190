@@ -1,0 +1,7 @@
+Primero levantar el servidor Fork:
+
+pm2 start serverCopy.js --name serverModoFork --watch -- 8081
+
+Luego levantar los Cluster:
+
+pm2 start serverCopy.js --name serverModoCluster -i max --watch -- 8082
