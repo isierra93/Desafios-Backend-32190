@@ -102,5 +102,5 @@ httpServer.listen(PORT, () => {
 });
 
 app.get('/nginex', (req, res) =>{
-  res.send(`Servidor escuchando en el puerto: ${PORT} PID: ${process.pid}.`)
+  res.sendFile(`Servidor escuchando en el puerto: ${PORT} PID: ${process.pid}.`)
 });
