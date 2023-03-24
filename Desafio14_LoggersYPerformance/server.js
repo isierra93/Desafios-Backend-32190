@@ -14,6 +14,7 @@ import passport from "passport";
 import { DOT_ENV } from "./src/config/config.js";
 import cluster from "cluster";
 import os from "os";
+import * as logger from "./src/logger/logger.js"
 
 //---------------------------------------------------//
 //Importar contenedor
@@ -26,19 +27,19 @@ import usuariosDB from "./src/contenedores/mongo/usuariosContainer.js";
 import "./src/config/passport.js";
 
 if (DOT_ENV.MODE !== 'FORK' && DOT_ENV.MODE !== 'CLUSTER') {
-  console.log(`El MODE: "${DOT_ENV.MODE}" es inválido. Opciones: "FORK"(default) || "CLUSTER" .`);
+  logger.logConsola.info(`El modo: "${DOT_ENV.MODE}" es inválido. Opciones: "FORK"(default), "CLUSTER" .`)
   process.exit(0)
 }
 
 if (DOT_ENV.MODE == 'CLUSTER' && cluster.isPrimary) {
-  console.log(`Master ${process.pid} is runing.`);
+  logger.logConsola.info(`Master ${process.pid} is runing.`)
   const numCPUs = os.cpus().length;
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
   cluster.on("exit", (worker, code, signal) => {
-    console.log(`Worker ${worker.process.pid} died`);
+    logger.logConsola.info(`Worker ${worker.process.pid} died`)
     cluster.fork();
   });
 } else {
@@ -77,7 +78,7 @@ if (DOT_ENV.MODE == 'CLUSTER' && cluster.isPrimary) {
 
   //Socket - "connection" se ejecuta la primera vez que se abre una nueva conexion
   io.on(`connection`, async (socket) => {
-    console.log(`Un usuario se ha conectado`);
+    logger.logConsola.info(`Un usuario se ha conectado al socket.`);
     //Envia los productos almacenados
     const productos = await productosContainer.getAll();
     socket.emit(`productos`, productos);
@@ -114,12 +115,10 @@ if (DOT_ENV.MODE == 'CLUSTER' && cluster.isPrimary) {
 
   //Sever ON con handle de error de inicio
   httpServer.listen(DOT_ENV.PORT, () => {
-    console.log(
-      `Servidor escuchando en el puerto: ${DOT_ENV.PORT} PID: ${process.pid}.\nIniciado en MODE: ${DOT_ENV.MODE}.`
-    );
+    logger.logConsola.info("Servidor escuchando en el puerto: " + DOT_ENV.PORT + " PID: " + process.pid + " ." + "Iniciado en MODE: " + DOT_ENV.MODE + " .");
   });
 
   app.use("/", new Routers());
   app.use("/info", new InfoRouter());
   app.use("/randoms", new APIRandomRouter());
-}
+};

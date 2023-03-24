@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import {DOT_ENV} from "../config/config.js"
+import {DOT_ENV} from "../config/config.js";
+import * as logger from "../logger/logger.js";
 
 class MongoContainer{
     constructor(){
@@ -11,7 +12,7 @@ class MongoContainer{
                 useNewUrlParser:true,
                 UseUnifiedTopology:true
             });
-            console.log(`Conectado a la DB : ${DOT_ENV.URL}`);
+            logger.logConsola.info(`Conectado a la DB : ${DOT_ENV.URL}`);
         }catch(err){
             throw new Error(err);
         };
@@ -19,7 +20,7 @@ class MongoContainer{
     async disconnect(){
         try{
             await mongoose.disconnect();
-            console.log(`DB desconectada`);
+            logger.logConsola.info(`DB desconectada`);
         }catch(err){
             throw new Error(err);
         };
