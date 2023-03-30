@@ -1,17 +1,16 @@
 import mongoose from "mongoose";
-import URL from "../config/MongoDB.js";
 
 class MongoContainer{
     constructor(){
-
+        mongoose.set('strictQuery', false)
     };
     async connect(){
         try{
-            await mongoose.connect(URL,{
+            await mongoose.connect(process.env.MONGO_URL,{
                 useNewUrlParser:true,
-                UseUnifiedTopology:true
+                UseUnifiedTopology:true,
             });
-            console.log(`Conectado a la DB : ${URL}`);
+            console.log(`Conectado a la DB : ${process.env.MONGO_URL}`);
         }catch(err){
             throw new Error(err);
         };
