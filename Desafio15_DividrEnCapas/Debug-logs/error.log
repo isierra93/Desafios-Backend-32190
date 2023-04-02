@@ -1,0 +1,8 @@
+[2023-04-01T12:36:02.012] [ERROR] error - TypeError: Cannot read properties of undefined (reading 'sendMail')
+    at Usuarios.save (file:///C:/Users/Iv%C3%A1n.-/Documents/Desafios-Backend-32190/ProyectoFinal_03/src/contenedores/mongohijos/Usuarios.js:58:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Strategy._verify (file:///C:/Users/Iv%C3%A1n.-/Documents/Desafios-Backend-32190/ProyectoFinal_03/src/Passport.js:47:7)
+[2023-04-01T12:56:56.835] [ERROR] error - TypeError: Cannot read properties of undefined (reading 'sendMail')
+    at Usuarios.save (file:///C:/Users/Iv%C3%A1n.-/Documents/Desafios-Backend-32190/ProyectoFinal_03/src/contenedores/mongohijos/Usuarios.js:58:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Strategy._verify (file:///C:/Users/Iv%C3%A1n.-/Documents/Desafios-Backend-32190/ProyectoFinal_03/src/Passport.js:47:7)
