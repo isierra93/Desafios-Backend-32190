@@ -1,28 +1,30 @@
 import mongoose from "mongoose";
+import { MONGO_OPTIONS } from "../config/mongoOptions.js";
+import * as logger from "../Logger.js";
 
-class MongoContainer{
-    constructor(){
-        mongoose.set('strictQuery', false)
+class MongoContainer {
+  constructor() {
+    mongoose.set("strictQuery", false);
+  };
+
+  async connect() {
+    try {
+      let res = await mongoose.connect(
+        process.env.MONGO_URL,
+        MONGO_OPTIONS
+      );
+    } catch (error) {
+      logger.logError.error(error);
     };
-    async connect(){
-        try{
-            await mongoose.connect(process.env.MONGO_URL,{
-                useNewUrlParser:true,
-                UseUnifiedTopology:true,
-            });
-            console.log(`Conectado a la DB : ${process.env.MONGO_URL}`);
-        }catch(err){
-            throw new Error(err);
-        };
-    }
-    async disconnect(){
-        try{
-            await mongoose.disconnect();
-            console.log(`DB desconectada`);
-        }catch(err){
-            throw new Error(err);
-        };
+  };
+
+  async disconnect() {
+    try {
+      await mongoose.disconnect();
+    } catch (error) {
+      logger.logError.error(error);
     };
+  };
 };
 
 export default MongoContainer;
