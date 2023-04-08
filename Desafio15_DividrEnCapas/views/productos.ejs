@@ -23,7 +23,7 @@
         <tr>
           <td><%=productos[i].titulo%></td>
           <td><%=productos[i].precio%></td>
-          <td><%=productos[i].thumbnail%></td>
+          <td><img style="width: 5rem;" src="<%=productos[i].thumbnail%>" alt="<%=productos[i].titulo%>"></td>
           <td><a href="/addCarritoProd/<%-user.email%>/<%-productos[i]._id%>"><button class="btn btn-success"> Añadir al Carrito </button></a></td>
         </tr>
         <%};%>
