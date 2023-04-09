@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { MONGO_OPTIONS } from "../config/mongoOptions.js";
-import * as logger from "../Logger.js";
+import { MONGO_OPTIONS } from "../../config/mongoOptions.js";
+import * as logger from "../../Logger.js";
 
 class MongoContainer {
   constructor() {

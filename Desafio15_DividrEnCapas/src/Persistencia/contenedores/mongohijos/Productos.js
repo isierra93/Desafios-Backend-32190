@@ -1,6 +1,6 @@
 import MongoContainer from "../MongoContainer.js";
-import * as model from "../models/productosModel.js";
-import * as Logger from "../../Logger.js";
+import * as model from "../../models/productosModel.js";
+import * as Logger from "../../../Logger.js";
 
 export default class productos extends MongoContainer {
   constructor() {

@@ -1,7 +1,7 @@
-import Productos from "./contenedores/mongohijos/Productos.js"
-import Mensajes from "./contenedores/mongohijos/Mensajes.js"
-import Usuarios from "./contenedores/mongohijos/Usuarios.js"
-import Carritos from "./contenedores/mongohijos/Carritos.js"
+import Productos from "./Persistencia/contenedores/mongohijos/Productos.js"
+import Mensajes from "./Persistencia/contenedores/mongohijos/Mensajes.js"
+import Usuarios from "./Persistencia/contenedores/mongohijos/Usuarios.js"
+import Carritos from "./Persistencia/contenedores/mongohijos/Carritos.js"
 
 const Users = new Usuarios()
 const Messages = new Mensajes()

@@ -1,8 +1,8 @@
 import MongoContainer from "../MongoContainer.js";
-import * as model from "../models/usuariosModel.js";
-import * as Logger from "../../Logger.js";
-import * as Mailer from "../../Nodemailer.js";
-import admEmail from "../../Nodemailer.js";
+import * as model from "../../models/usuariosModel.js";
+import * as Logger from "../../../Logger.js";
+import * as Mailer from "../../../Nodemailer.js";
+
 
 export default class Usuarios extends MongoContainer {
   constructor() {
@@ -51,7 +51,7 @@ export default class Usuarios extends MongoContainer {
       // enviar mail al admin registro nuevo
       const mailOptions = {
         from: "App Node",
-        to: admEmail,
+        to: Mailer.admEmail,
         subject: "Nuevo registro",
         html: `${nuevoUser}`,
       };
