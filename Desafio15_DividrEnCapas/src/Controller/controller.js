@@ -1,8 +1,8 @@
 import * as Logger from "../Logger.js";
-import * as db from "../DBs.js";
+import Service from "../Service/Service.js";
 import * as Faker from "../Faker.js";
 import * as Mailer from "../Nodemailer.js";
-import admEmail from "../Nodemailer.js";
+import {admEmail , ecommerceGmail} from "../Nodemailer.js";
 import * as Multer from "../Multer.js";
 
 //MULTER
@@ -61,7 +61,7 @@ async function getProductos(req, res) {
     const tagsFiltrables = Faker.tagsFiltrables.join(" - ");
     const { filtros } = req.params;
     let listExists = false;
-    let productos = await db.Products.getAll();
+    let productos = await Service.getAllProducts();
 
     if (productos.length <= 0) {
       return res.render("productos", { user: req.user, listExists });
@@ -71,7 +71,7 @@ async function getProductos(req, res) {
 
     if (filtros) {
       const tags = filtros.split("-");
-      productos = await db.Products.getByTags(tags);
+      productos = await Service.getProdByTags(tags);
     };
 
     res.render("productos", {
@@ -98,7 +98,7 @@ async function postProductos(req, res) {
       const prodMocks = Faker.getProdMocks(cant);
     };
 
-    await db.Products.saveMany(prodMocks);
+    await Service.saveManyProducts(prodMocks);
 
     return res.redirect("/productos");
   } catch (error) {
@@ -114,20 +114,20 @@ async function getCarrito(req, res) {
     const { user } = req;
     let carritoExists = false;
 
-    let carritoId = await db.Carros.getCarritoIdByDueño(dueñoId);
+    let carritoId = await Service.getCartByOwner(dueñoId);
     if (!carritoId) {
       return res.render("carrito", { user: user, carritoExists });
     };
 
     carritoExists = true;
 
-    const carrito = await db.Carros.getById(carritoId);
+    const carrito = await Service.getCartById(carritoId);
     const productosId = carrito.productos;
 
     const miCarrito = [];
 
     for (let i = 0; i < productosId.length; i++) {
-      miCarrito.push(await db.Products.getById(productosId[i]));
+      miCarrito.push(await Service.getProdById(productosId[i]));
     }
 
     res.render("carrito", {
@@ -147,12 +147,12 @@ async function getAddCarritoProd(req, res) {
     const { referer } = req.headers;
     const { email, prodId } = req.params;
 
-    let carritoId = await db.Carros.getCarritoIdByDueño(email);
+    let carritoId = await Service.getCartByOwner(email);
     if (!carritoId) {
-      carritoId = await db.Carros.crearCarrito(email);
+      carritoId = await Service.createCart(email);
     }
 
-    await db.Carros.añadirProducto(carritoId, prodId);
+    await Service.addProdToCart(carritoId, prodId);
 
     return res.redirect(referer);
   } catch (error) {
@@ -165,9 +165,9 @@ async function getDeleteCarritoProd(req, res) {
     const { referer } = req.headers;
     const { email, prodId } = req.params;
 
-    let carritoId = await db.Carros.getCarritoIdByDueño(email);
+    let carritoId = await Service.getCartByOwner(email);
 
-    await db.Carros.eliminarProducto(carritoId, prodId);
+    await Service.deleteProdFromCart(carritoId, prodId);
 
     return res.redirect(referer);
   } catch (error) {
@@ -180,7 +180,7 @@ async function getPedidoCarrito(req, res) {
     const { referer } = req.headers;
     const { email, productosId } = req.params;
     const productos = productosId.split(",");
-    const user = await db.Users.getByEmail(email);
+    const user = await Service.getUserByEmail(email);
     // enviar email al admin pedido de compra
     /*     Logger.logConsola.info("\n Comprador user: " + user + "\n Carrito: " + productos) */
 
@@ -191,7 +191,7 @@ async function getPedidoCarrito(req, res) {
       html: `${productos}
       `,
     };
-    Mailer.ecommerceGmail.sendMail(mailOptions);
+    ecommerceGmail.sendMail(mailOptions);
 
     // enviar wpp al admin pedido de compra
 
@@ -231,10 +231,10 @@ function getFailLogin(req, res) {
 async function websocket (socket) {
   socket.on("addMocks", async (data) => {
     const prodMocks = Faker.getProdMocks();
-    await db.Products.saveMany(prodMocks);
+    await Service.saveManyProducts(prodMocks);
 });
   socket.on("deleteAllProductos", async (data) => {
-    await db.Products.deleteAll();
+    await Service.deleteAllProds();
   });
 }
 

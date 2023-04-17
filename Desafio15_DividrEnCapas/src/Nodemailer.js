@@ -15,7 +15,7 @@ const ecommerceGmail = createTransport({
   auth : authentication
 });
 
-export default{
+export {
   ecommerceGmail,
   admEmail
 };
