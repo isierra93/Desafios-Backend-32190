@@ -3,14 +3,13 @@ import express from "express";
 import { Server } from "http";
 import { Server as IOServer } from "socket.io";
 import MongoStore from "connect-mongo";
-import passport from "passport";
 import session from "express-session";
 import compression from "compression";
 import { MONGO_OPTIONS } from "./src/config/mongoOptions.js";
 import { DOT_ENV } from "./src/Dot_Env_Input.js";
 import Controller from "./src/Controller/controller.js";
 import * as Logger from "./src/Logger.js";
-import * as Passport from "./src/Passport.js";
+import passport from "./src/Router/Passport/passport.js"
 import APIRouter from "./src/Router/router.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -69,12 +68,6 @@ if (DOT_ENV.MODE === "CLUSTER" && cluster.isPrimary) {
     })
   );
   app.use(passport.session());
-
-// Passport
-passport.use("login", Passport.Login);
-passport.use("signin", Passport.Signin);
-passport.serializeUser(Passport.Serializar);
-passport.deserializeUser(Passport.Deserializar);
 
 // App Router
 app.use("/", APIRouter);

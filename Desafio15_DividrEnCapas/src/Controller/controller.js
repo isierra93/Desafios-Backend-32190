@@ -1,8 +1,8 @@
 import * as Logger from "../Logger.js";
 import Service from "../Service/Service.js";
 import * as Faker from "../Faker.js";
-import * as Mailer from "../Nodemailer.js";
-import {admEmail , ecommerceGmail} from "../Nodemailer.js";
+//import {admEmail , ecommerceGmail} from "../Nodemailer.js";
+import bCrypt from "bcrypt";
 import * as Multer from "../Multer.js";
 
 //MULTER
@@ -184,14 +184,14 @@ async function getPedidoCarrito(req, res) {
     // enviar email al admin pedido de compra
     /*     Logger.logConsola.info("\n Comprador user: " + user + "\n Carrito: " + productos) */
 
-    const mailOptions = {
+    /* const mailOptions = {
       from: "Coderhouse EcommerceApp",
       to: admEmail,
       subject: `Nuevo pedido de compra de ${user.nombre}, correo : ${user.email}`,
       html: `${productos}
       `,
     };
-    ecommerceGmail.sendMail(mailOptions);
+    ecommerceGmail.sendMail(mailOptions); */
 
     // enviar wpp al admin pedido de compra
 
@@ -236,6 +236,19 @@ async function websocket (socket) {
   socket.on("deleteAllProductos", async (data) => {
     await Service.deleteAllProds();
   });
+};
+
+//Passport
+function isValidPassword(user, password) {
+  return bCrypt.compareSync(password, user.password)
+}
+
+function createHash(password) {
+  return bCrypt.hashSync(
+    password,
+    bCrypt.genSaltSync(10),
+    null
+  )
 }
 
 export default{
@@ -254,5 +267,7 @@ export default{
   getPerfil,
   checkAuthentication,
   uploadAvatar,
-  websocket
+  websocket,
+  isValidPassword,
+  createHash
 };

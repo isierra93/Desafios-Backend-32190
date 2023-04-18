@@ -1,4 +1,4 @@
-import { createTransport } from "nodemailer";
+/* import { createTransport } from "nodemailer";
 
 const user = process.env.TEST_EMAIL;
 const pass = process.env.TEST_PASSWORD;
@@ -18,4 +18,4 @@ const ecommerceGmail = createTransport({
 export {
   ecommerceGmail,
   admEmail
-};
+}; */

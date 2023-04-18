@@ -53,6 +53,10 @@ async function getUserByEmail(email){
     return await Users.getByEmail(email);
 };
 
+async function saveUser(user){
+    return await Users.save(user);
+};
+
 export default {
     getAllProducts,
     getProdById,
@@ -64,5 +68,6 @@ export default {
     getCartByOwner,
     getCartById,
     deleteProdFromCart,
-    getUserByEmail
+    getUserByEmail,
+    saveUser
 };

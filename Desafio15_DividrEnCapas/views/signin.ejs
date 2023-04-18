@@ -3,7 +3,7 @@
   
   <main class="container text-center">
     <h1>SignIn</h1>
-    <form action="/signin" method="post" enctype="multipart/form-data">
+    <form action="/signin" method="post">
       <label for="email">Ingrese su email</label> <br>
       <input type="text" id="email" name="email" placeholder="cuenta@empresa.com"> <br>
       <label for="password">Contraseña</label> <br>
@@ -25,5 +25,12 @@
       <a href="/login"> Loguearme </a>
     </button>
   </main>
+  <script>
+    const phoneInputField = document.querySelector("#phone");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+      utilsScript:
+        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    })
+  </script>
 
 <%- include('_foot') %>

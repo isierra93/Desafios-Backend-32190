@@ -1,4 +1,4 @@
-import bCrypt from "bcrypt"
+/* import bCrypt from "bcrypt"
 import {Strategy as LocalStrategy} from "passport-local"
 import * as db from "./DBs.js"
 import * as Logger from "./Logger.js"
@@ -101,4 +101,4 @@ export {
   Signin,
   Serializar,
   Deserializar
-}
+} */

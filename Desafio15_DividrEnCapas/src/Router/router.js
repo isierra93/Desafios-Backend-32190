@@ -1,5 +1,5 @@
 import { Router } from "express";
-import passport from "passport";
+import passport from "../Router/Passport/passport.js"
 import Controller from "../Controller/controller.js";
 
 const APIRouter = Router();
@@ -17,9 +17,9 @@ APIRouter.get("/failLogin", Controller.getFailLogin);
 APIRouter.get("/logout", Controller.checkAuthentication, Controller.getLogout)
 //Sigin
 APIRouter.get("/signin", Controller.getSignin);
-APIRouter.post("/signin", Controller.uploadAvatar ,passport.authenticate("signin", {
-    failureRedirect: "/failSignin",
-    successRedirect: "/",
+APIRouter.post("/signin", Controller.uploadAvatar, passport.authenticate("signin", { 
+    failureRedirect: "/failSignin", 
+    successRedirect: "/"
 }));
 APIRouter.get("/failSignin", Controller.getFailSignin);
 //Perfil
