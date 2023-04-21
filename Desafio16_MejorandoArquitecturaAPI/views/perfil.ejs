@@ -1,0 +1,22 @@
+<%- include('_head') %>
+
+<body>
+  
+  <main class="container text-center justify-content-center">
+    <%- include('_usuario') %> 
+
+    <%- include("_nav") %>
+
+    <div class="justify-content-center text-center row">
+      <h1 class="mt-4"> Información Personal </h1>
+      <ul>
+        <li class="col-7">Nombre: <%- user.nombre %> <%- user.apellido %>  </li>
+        <li class="col-7">Correo: <%- user.email %> </li>
+        <li class="col-7">Edad: <%- user.edad %> </li>
+        <li class="col-7">Numero: <%- user.numero %> </li>
+        <li class="col-7">Direccion: <%- user.direccion %> </li>
+      </ul>
+    </div>
+  </main>
+
+  <%- include('_foot') %> 
