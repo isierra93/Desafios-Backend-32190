@@ -2,10 +2,19 @@ import MongoContainer from "../MongoContainer.js";
 import * as model from "../../models/productosModel.js";
 import * as Logger from "../../../Logger.js";
 
-export default class productos extends MongoContainer {
+let instance;
+
+export default class ProductosDAOdb extends MongoContainer {
   constructor() {
     super();
-  }
+  };
+
+  static getInstance() {
+    if (!instance){
+      instance = new ProductosDAOdb()
+    };
+    return instance
+  };
 
   //GET
   async getAll() {

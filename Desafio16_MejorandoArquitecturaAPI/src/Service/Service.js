@@ -1,12 +1,13 @@
-import Productos from "../Persistencia/contenedores/mongohijos/Productos.js";
+import ProductosDAOdb from "../Persistencia/contenedores/mongohijos/ProductosDAOdb.js";
 import Mensajes from "../Persistencia/contenedores/mongohijos/MensajesDAOdb.js";
 import Usuarios from "../Persistencia/contenedores/mongohijos/Usuarios.js";
 import Carritos from "../Persistencia/contenedores/mongohijos/Carritos.js";
 
 const Users = new Usuarios();
 const Messages = Mensajes.getInstance()
-const Products = new Productos();
+const Products = ProductosDAOdb.getInstance()
 const Carros = new Carritos();
+
 
 async function getAllProducts(){
     return await Products.getAll();
