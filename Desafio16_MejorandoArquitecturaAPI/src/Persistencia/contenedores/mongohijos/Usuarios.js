@@ -1,6 +1,6 @@
 import MongoContainer from "../MongoContainer.js";
 import * as model from "../../models/usuariosModel.js";
-import * as Logger from "../../../Logger.js";
+import * as Logger from "../../../scripts/Logger.js";
 import * as Mailer from "../../../Nodemailer.js";
 
 

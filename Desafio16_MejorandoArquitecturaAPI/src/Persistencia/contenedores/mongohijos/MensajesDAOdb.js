@@ -1,6 +1,6 @@
 import MongoContainer from "../MongoContainer.js";
 import * as model from "../../models/mensajesModel.js";
-import * as Logger from "../../../Logger.js";
+import * as Logger from "../../../scripts/Logger.js";
 
 let instance;
 

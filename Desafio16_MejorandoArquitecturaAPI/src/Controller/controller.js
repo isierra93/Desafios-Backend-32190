@@ -1,6 +1,6 @@
-import * as Logger from "../Logger.js";
+import * as Logger from "../scripts/Logger.js";
 import Service from "../Service/Service.js";
-import * as Faker from "../Faker.js";
+import * as Faker from "../scripts/Faker.js";
 //import {admEmail , ecommerceGmail} from "../Nodemailer.js";
 import bCrypt from "bcrypt";
 import * as Multer from "../Multer.js";
