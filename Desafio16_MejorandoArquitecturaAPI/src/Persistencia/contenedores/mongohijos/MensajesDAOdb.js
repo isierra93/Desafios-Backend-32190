@@ -2,9 +2,18 @@ import MongoContainer from "../MongoContainer.js";
 import * as model from "../../models/mensajesModel.js";
 import * as Logger from "../../../Logger.js";
 
-export default class Mensajes extends MongoContainer {
+let instance;
+
+export default class MensajesDAODb extends MongoContainer {
   constructor() {
     super();
+  }
+
+  static getInstance() {
+    if (!instance){
+      instance = new MensajesDAODb()
+    };
+    return instance
   }
 
   //GET
